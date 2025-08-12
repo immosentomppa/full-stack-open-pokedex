@@ -7,7 +7,7 @@ on:
 
 jobs:
   simple_deployment_pipeline:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # latest 24.04 introduces some errors with playwright in Github Actions
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
