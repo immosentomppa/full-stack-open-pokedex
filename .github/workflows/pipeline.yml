@@ -50,19 +50,19 @@ jobs:
           DEFAULT_BUMP: patch
 
   discord_webhook:
-    needs: [tag_release]
+    needs: [simple_deployment_pipeline, tag_release]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - uses: actions/checkout@v4
       - name: Send Discord notification on success
-        if: ${{success() && github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
+        if: ${{needs.simple_deployment_pipeline.result == 'success' && github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\": \"A new release of Pokedex deployed to ${{ secrets.RENDER_URL }}\"}" \
+          -d "{\"content\": \"A new release of Pokedex deployed to ${{ secrets.RENDER_URL }} by $GITHUB_ACTOR \"}" \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: Send Discord notification on failure
-        if: ${{ failure() && github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
+        if: ${{needs.simple_deployment_pipeline.result != 'success' && github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
         run: |
           curl -X POST -H "Content-Type: application/json" \
           -d "{\"content\": \"commit $GITHUB_SHA by $GITHUB_ACTOR broke the build :(\"}" \
