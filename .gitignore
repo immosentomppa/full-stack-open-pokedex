@@ -1,2 +1,4 @@
 dist/
 node_modules/
+act
+playwright-report/
