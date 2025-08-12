@@ -65,5 +65,5 @@ jobs:
         if: ${{needs.simple_deployment_pipeline.result != 'success' && github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d "{\"content\": \"commit $GITHUB_SHA by $GITHUB_ACTOR broke the build :(\"}" \
+          -d "{\"content\": \"Commit https://github.com/${GITHUB_REPOSITORY}/commit/$GITHUB_SHA by $GITHUB_ACTOR broke the build :(\"}" \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
